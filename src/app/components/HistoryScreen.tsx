@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { FileText, Download, AlertTriangle, Phone, Trash2, ChevronRight, Calendar, Pill, Shield } from "lucide-react";
+import { FileText, Download, AlertTriangle, Phone, Trash2, ChevronRight, ChevronDown, Calendar, Pill, Shield } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { api } from "../../lib/api";
 
@@ -18,6 +18,13 @@ interface SavedMed {
   use: string;
   icon: string;
   stock: string;
+  effects: string[];
+  sideEffects: string[];
+  dosage: string;
+  frequency: string;
+  timing: string;
+  duration: string;
+  warnings: string[];
 }
 
 const SEVERITY_CONFIG = {
@@ -35,6 +42,7 @@ export function HistoryScreen({ darkMode }: HistoryScreenProps) {
   const [entries, setEntries] = useState<HistoryEntry[]>([]);
   const [savedMeds, setSavedMeds] = useState<SavedMed[]>([]);
   const [showExportSuccess, setShowExportSuccess] = useState(false);
+  const [expandedMed, setExpandedMed] = useState<string | null>(null);
 
   useEffect(() => {
     api.history.list().then((rows) => {
@@ -55,6 +63,13 @@ export function HistoryScreen({ darkMode }: HistoryScreenProps) {
         use: r.use || "",
         icon: r.icon || "💊",
         stock: r.stock || "",
+        effects: r.effects || [],
+        sideEffects: r.sideEffects || [],
+        dosage: r.dosage || "",
+        frequency: r.frequency || "",
+        timing: r.timing || "",
+        duration: r.duration || "",
+        warnings: r.warnings || [],
       })));
     }).catch(() => {});
   }, []);
@@ -185,25 +200,122 @@ export function HistoryScreen({ darkMode }: HistoryScreenProps) {
 
         {activeTab === "saved" && (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {savedMeds.map((med, i) => (
-              <motion.div key={med.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}
-                className={`rounded-2xl p-4 flex items-center gap-3 ${darkMode ? "bg-gray-800 border border-gray-700" : "bg-white border border-gray-100 shadow-sm"}`}>
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${darkMode ? "bg-blue-900/30" : "bg-blue-50"}`}>
-                  <span style={{ fontSize: "24px" }}>{med.icon}</span>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className={`${darkMode ? "text-white" : "text-gray-900"}`} style={{ fontSize: "14px", fontWeight: 600 }}>{med.name}</p>
-                  <p className={`${darkMode ? "text-gray-400" : "text-gray-500"}`} style={{ fontSize: "12px" }}>{med.use}</p>
-                  {med.stock && (
-                    <p className={`${darkMode ? "text-blue-400" : "text-blue-500"}`} style={{ fontSize: "11px", marginTop: "2px" }}>{med.stock}</p>
-                  )}
-                </div>
-                <button onClick={() => handleDeleteSavedMed(med.id)}
-                  className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${darkMode ? "text-gray-600 hover:bg-red-900/30 hover:text-red-400" : "text-gray-400 hover:bg-red-50 hover:text-red-500"}`}>
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </motion.div>
-            ))}
+            {savedMeds.map((med, i) => {
+              const isExpanded = expandedMed === med.id;
+              return (
+                <motion.div key={med.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}
+                  className={`rounded-2xl overflow-hidden ${darkMode ? "bg-gray-800 border border-gray-700" : "bg-white border border-gray-100 shadow-sm"}`}>
+                  <div className="p-4 flex items-center gap-3">
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${darkMode ? "bg-blue-900/30" : "bg-blue-50"}`}>
+                      <span style={{ fontSize: "24px" }}>{med.icon}</span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className={`${darkMode ? "text-white" : "text-gray-900"}`} style={{ fontSize: "14px", fontWeight: 600 }}>{med.name}</p>
+                      <p className={`${darkMode ? "text-gray-400" : "text-gray-500"}`} style={{ fontSize: "12px" }}>{med.use}</p>
+                      {med.stock && (
+                        <p className={`${darkMode ? "text-blue-400" : "text-blue-500"}`} style={{ fontSize: "11px", marginTop: "2px" }}>{med.stock}</p>
+                      )}
+                    </div>
+                    <button onClick={() => setExpandedMed(isExpanded ? null : med.id)}
+                      className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-all ${isExpanded ? (darkMode ? "bg-blue-900/30 text-blue-400" : "bg-blue-50 text-blue-600") : (darkMode ? "text-gray-500 hover:bg-gray-700" : "text-gray-400 hover:bg-gray-50")}`}>
+                      <ChevronDown className={`w-4 h-4 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                    </button>
+                    <button onClick={() => handleDeleteSavedMed(med.id)}
+                      className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${darkMode ? "text-gray-600 hover:bg-red-900/30 hover:text-red-400" : "text-gray-400 hover:bg-red-50 hover:text-red-500"}`}>
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  {/* Expanded details */}
+                  <AnimatePresence>
+                    {isExpanded && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="overflow-hidden"
+                      >
+                        <div className={`px-4 pb-4 pt-1 border-t ${darkMode ? "border-gray-700" : "border-gray-100"}`}>
+                          {/* How to take */}
+                          {(med.dosage || med.frequency || med.timing || med.duration) && (
+                            <div className="mb-3">
+                              <p className={`mb-2 ${darkMode ? "text-gray-300" : "text-gray-700"}`} style={{ fontSize: "12px", fontWeight: 600 }}>How to Take</p>
+                              <div className="grid grid-cols-2 gap-2">
+                                {med.dosage && (
+                                  <div className={`px-3 py-2 rounded-lg ${darkMode ? "bg-gray-700" : "bg-gray-50"}`}>
+                                    <p className={`${darkMode ? "text-gray-400" : "text-gray-500"}`} style={{ fontSize: "10px" }}>Dosage</p>
+                                    <p className={`${darkMode ? "text-white" : "text-gray-800"}`} style={{ fontSize: "12px", fontWeight: 500 }}>{med.dosage}</p>
+                                  </div>
+                                )}
+                                {med.frequency && (
+                                  <div className={`px-3 py-2 rounded-lg ${darkMode ? "bg-gray-700" : "bg-gray-50"}`}>
+                                    <p className={`${darkMode ? "text-gray-400" : "text-gray-500"}`} style={{ fontSize: "10px" }}>Frequency</p>
+                                    <p className={`${darkMode ? "text-white" : "text-gray-800"}`} style={{ fontSize: "12px", fontWeight: 500 }}>{med.frequency}</p>
+                                  </div>
+                                )}
+                                {med.timing && (
+                                  <div className={`px-3 py-2 rounded-lg ${darkMode ? "bg-gray-700" : "bg-gray-50"}`}>
+                                    <p className={`${darkMode ? "text-gray-400" : "text-gray-500"}`} style={{ fontSize: "10px" }}>Timing</p>
+                                    <p className={`${darkMode ? "text-white" : "text-gray-800"}`} style={{ fontSize: "12px", fontWeight: 500 }}>{med.timing}</p>
+                                  </div>
+                                )}
+                                {med.duration && (
+                                  <div className={`px-3 py-2 rounded-lg ${darkMode ? "bg-gray-700" : "bg-gray-50"}`}>
+                                    <p className={`${darkMode ? "text-gray-400" : "text-gray-500"}`} style={{ fontSize: "10px" }}>Duration</p>
+                                    <p className={`${darkMode ? "text-white" : "text-gray-800"}`} style={{ fontSize: "12px", fontWeight: 500 }}>{med.duration}</p>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Effects */}
+                          {med.effects.length > 0 && (
+                            <div className="mb-3">
+                              <p className={`mb-2 ${darkMode ? "text-gray-300" : "text-gray-700"}`} style={{ fontSize: "12px", fontWeight: 600 }}>Effects</p>
+                              <div className="space-y-1">
+                                {med.effects.map((e, j) => (
+                                  <div key={j} className="flex items-start gap-2">
+                                    <div className={`w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0 ${darkMode ? "bg-green-400" : "bg-green-500"}`} />
+                                    <span className={`${darkMode ? "text-gray-300" : "text-gray-600"}`} style={{ fontSize: "12px" }}>{e}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Side Effects */}
+                          {med.sideEffects.length > 0 && (
+                            <div className="mb-3">
+                              <p className={`mb-2 ${darkMode ? "text-gray-300" : "text-gray-700"}`} style={{ fontSize: "12px", fontWeight: 600 }}>Side Effects</p>
+                              <div className="space-y-1">
+                                {med.sideEffects.map((e, j) => (
+                                  <div key={j} className="flex items-start gap-2">
+                                    <div className={`w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0 ${darkMode ? "bg-yellow-400" : "bg-yellow-500"}`} />
+                                    <span className={`${darkMode ? "text-gray-300" : "text-gray-600"}`} style={{ fontSize: "12px" }}>{e}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Warnings */}
+                          {med.warnings.length > 0 && (
+                            <div className={`p-3 rounded-lg ${darkMode ? "bg-red-900/20 border border-red-800/30" : "bg-red-50 border border-red-100"}`}>
+                              <p className={`mb-1.5 ${darkMode ? "text-red-400" : "text-red-600"}`} style={{ fontSize: "12px", fontWeight: 600 }}>Warnings</p>
+                              <p className={`${darkMode ? "text-red-300/80" : "text-red-500"}`} style={{ fontSize: "11px" }}>
+                                Avoid if: {med.warnings.join(", ")}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              );
+            })}
             {savedMeds.length === 0 && (
               <div className="col-span-full text-center py-16">
                 <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">

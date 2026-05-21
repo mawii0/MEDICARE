@@ -259,7 +259,19 @@ export function ChatScreen({ initialSymptom, darkMode, onNavigateToPharmacy }: C
     const isSaved = savedMeds.has(medName);
     setSavedMeds((prev) => { const n = new Set(prev); isSaved ? n.delete(medName) : n.add(medName); return n; });
     if (!isSaved && med) {
-      api.savedMeds.add({ name: med.name, use: med.whatItDoes?.slice(0, 80), icon: med.icon, stock: "" }).catch(() => {});
+      api.savedMeds.add({
+        name: med.name,
+        use: med.whatItDoes?.slice(0, 80),
+        icon: med.icon,
+        stock: "",
+        effects: med.effects,
+        sideEffects: med.sideEffects,
+        dosage: med.dosage,
+        frequency: med.frequency,
+        timing: med.timing,
+        duration: med.duration,
+        warnings: med.warnings,
+      }).catch(() => {});
     }
   };
 

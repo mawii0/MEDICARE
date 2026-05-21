@@ -65,7 +65,7 @@ export const api = {
 
   savedMeds: {
     list: () => request<any[]>("/saved-meds"),
-    add: (data: { name: string; use?: string; icon?: string; stock?: string }) =>
+    add: (data: { name: string; use?: string; icon?: string; stock?: string; effects?: string[]; sideEffects?: string[]; dosage?: string; frequency?: string; timing?: string; duration?: string; warnings?: string[] }) =>
       request<any>("/saved-meds", { method: "POST", body: JSON.stringify(data) }),
     remove: (id: number | string) =>
       request<void>(`/saved-meds/${id}`, { method: "DELETE" }),

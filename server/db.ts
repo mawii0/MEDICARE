@@ -37,9 +37,22 @@ db.exec(`
     use_text TEXT,
     icon TEXT,
     stock TEXT,
+    effects TEXT,
+    side_effects TEXT,
+    dosage TEXT,
+    frequency TEXT,
+    timing TEXT,
+    duration TEXT,
+    warnings TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
   );
 `);
+
+// Add new columns if they don't exist (migration for existing DBs)
+const addCol = (col: string) => {
+  try { db.exec(`ALTER TABLE saved_meds ADD COLUMN ${col} TEXT`); } catch {}
+};
+["effects", "side_effects", "dosage", "frequency", "timing", "duration", "warnings"].forEach(addCol);
 
 export default db;
