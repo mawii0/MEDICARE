@@ -145,7 +145,9 @@ export function Sidebar({
                     ? "bg-blue-600/20 text-blue-400"
                     : "bg-blue-50 text-blue-700"
                   : isDisabled
-                    ? "opacity-40 cursor-default"
+                    ? darkMode
+                      ? "text-gray-400 opacity-70 cursor-default"
+                      : "text-gray-500 opacity-60 cursor-default"
                     : darkMode
                       ? "text-gray-400 hover:bg-gray-800 hover:text-gray-200"
                       : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
@@ -365,7 +367,9 @@ export function BottomNav({
               isActive
                 ? "text-blue-500"
                 : isDisabled
-                  ? "opacity-30"
+                  ? darkMode
+                    ? "text-gray-400 opacity-60"
+                    : "text-gray-400 opacity-50"
                   : darkMode
                     ? "text-gray-500"
                     : "text-gray-400"
