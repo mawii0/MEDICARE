@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { AlertTriangle, Phone, Trash2, ChevronDown, Calendar, Pill, Settings } from "lucide-react";
+import { AlertTriangle, Trash2, ChevronDown, Calendar, Pill, Settings } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { api } from "../../lib/api";
 
@@ -75,9 +75,6 @@ export function HistoryScreen({ darkMode }: { darkMode: boolean }) {
             <p className={`text-sm font-semibold ${darkMode ? "text-red-300" : "text-red-700"}`}>Experiencing severe symptoms?</p>
             <p className={`text-xs ${darkMode ? "text-red-400/70" : "text-red-500"}`}>Chest pain, difficulty breathing, sudden severe pain</p>
           </div>
-          <a href="tel:911" className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-red-600 text-white text-xs font-semibold flex-shrink-0">
-            <Phone className="w-3.5 h-3.5" />Call 911
-          </a>
         </div>
 
         {/* Tabs */}
