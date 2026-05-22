@@ -36,12 +36,7 @@ function AppContent() {
   };
 
   return (
-    <div
-      className={`flex h-screen w-screen overflow-hidden ${
-        darkMode ? "bg-gray-950" : "bg-gray-50"
-      }`}
-      style={{ fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }}
-    >
+    <div className={`flex h-screen w-screen overflow-hidden ${darkMode ? "bg-[#09090b]" : "bg-[#fafafa]"}`}>
       <Sidebar
         active={screen}
         onNavigate={setScreen}

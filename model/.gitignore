@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.bak
+cell_*.py
+patch_*.py
+verify_*.py
+debug_*.py
+test_*.py
+create_*.py
+
+# Keep data/ and models/ tracked for GitHub pushability
+# (these are intentionally NOT ignored — they contain the pretrained artifacts)

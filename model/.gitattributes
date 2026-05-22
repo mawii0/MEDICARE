@@ -1,0 +1,19 @@
+# Git attributes for Pharmacare
+
+# Treat binary files as binary for diff purposes
+*.pkl       binary
+*.safetensors binary
+*.model     binary
+*.pth       binary
+*.pt        binary
+*.bin       binary
+
+# JSONL files are text but may have long lines
+*.jsonl     text eol=lf
+*.json      text eol=lf
+
+# Notebook files
+*.ipynb     text eol=lf
+
+# Python files
+*.py        text eol=lf
