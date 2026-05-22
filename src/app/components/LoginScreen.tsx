@@ -35,8 +35,8 @@ export function LoginScreen({ darkMode }: { darkMode: boolean }) {
       <div className="hidden lg:flex lg:w-1/2 bg-blue-600 items-center justify-center p-12">
         <div className="max-w-md">
           <div className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
-              <span style={{ fontSize: "20px" }}>{"\u2695\ufe0f"}</span>
+            <div className="w-10 h-10 rounded-lg bg-white border-2 border-blue-600 flex items-center justify-center shadow-sm">
+              <span className="text-blue-600" style={{ fontSize: "20px" }}>{"\u2695\ufe0f"}</span>
             </div>
             <span className="text-white text-xl font-bold">Pharmacare</span>
           </div>
@@ -64,8 +64,8 @@ export function LoginScreen({ darkMode }: { darkMode: boolean }) {
         <div className="w-full max-w-sm">
           {/* Mobile logo */}
           <div className="flex items-center gap-2 mb-10 lg:hidden">
-            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
-              <span style={{ fontSize: "16px" }}>{"\u2695\ufe0f"}</span>
+            <div className="w-8 h-8 rounded-lg bg-white border-2 border-blue-600 flex items-center justify-center shadow-sm">
+              <span className="text-blue-600" style={{ fontSize: "16px" }}>{"\u2695\ufe0f"}</span>
             </div>
             <span className={`text-lg font-bold ${darkMode ? "text-white" : "text-gray-900"}`}>Pharmacare</span>
           </div>

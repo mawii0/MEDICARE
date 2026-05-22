@@ -28,8 +28,8 @@ export function Sidebar({ active, onNavigate, darkMode, onToggleDark, hasChat }:
       {/* Logo */}
       <div className={`h-14 flex items-center ${collapsed ? "px-2 justify-center" : "px-4 justify-between"} border-b ${darkMode ? "border-gray-800" : "border-gray-100"}`}>
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-md bg-blue-600 flex items-center justify-center flex-shrink-0">
-            <span style={{ fontSize: "13px" }}>{"\u2695\ufe0f"}</span>
+          <div className="w-7 h-7 rounded-md bg-white border-2 border-blue-600 flex items-center justify-center flex-shrink-0 shadow-sm">
+            <span className="text-blue-600" style={{ fontSize: "13px" }}>{"\u2695\ufe0f"}</span>
           </div>
           {!collapsed && <span className={`text-sm font-bold ${darkMode ? "text-white" : "text-gray-900"}`}>Pharmacare</span>}
         </div>
@@ -99,8 +99,8 @@ export function MobileTopBar({ darkMode, onToggleDark }: Pick<NavComponentProps,
   return (
     <header className={`md:hidden flex items-center justify-between px-4 h-14 border-b flex-shrink-0 ${darkMode ? "bg-[#09090b] border-gray-800" : "bg-white border-gray-200"}`}>
       <div className="flex items-center gap-2">
-        <div className="w-6 h-6 rounded-md bg-blue-600 flex items-center justify-center">
-          <span style={{ fontSize: "11px" }}>{"\u2695\ufe0f"}</span>
+        <div className="w-6 h-6 rounded-md bg-white border-2 border-blue-600 flex items-center justify-center shadow-sm">
+          <span className="text-blue-600" style={{ fontSize: "11px" }}>{"\u2695\ufe0f"}</span>
         </div>
         <span className={`text-sm font-bold ${darkMode ? "text-white" : "text-gray-900"}`}>Pharmacare</span>
       </div>
