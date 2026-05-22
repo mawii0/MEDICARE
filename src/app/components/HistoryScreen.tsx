@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { AlertTriangle, Trash2, ChevronDown, Calendar, Pill, Settings } from "lucide-react";
+import { Trash2, ChevronDown, Calendar, Pill, Settings } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { api } from "../../lib/api";
 
@@ -66,15 +66,6 @@ export function HistoryScreen({ darkMode }: { darkMode: boolean }) {
         <div className="mb-6">
           <h2 className={`text-xl font-bold ${darkMode ? "text-white" : "text-gray-900"}`}>Health Records</h2>
           <p className={`text-xs mt-0.5 ${darkMode ? "text-gray-500" : "text-gray-400"}`}>Your symptom history and saved medications</p>
-        </div>
-
-        {/* Emergency Banner */}
-        <div className={`mb-5 p-3 rounded-xl flex flex-col sm:flex-row sm:items-center gap-2.5 ${darkMode ? "bg-red-950/30 border border-red-900/50" : "bg-red-50 border border-red-200"}`}>
-          <AlertTriangle className={`w-4 h-4 flex-shrink-0 ${darkMode ? "text-red-400" : "text-red-500"}`} />
-          <div className="flex-1">
-            <p className={`text-sm font-semibold ${darkMode ? "text-red-300" : "text-red-700"}`}>Experiencing severe symptoms?</p>
-            <p className={`text-xs ${darkMode ? "text-red-400/70" : "text-red-500"}`}>Chest pain, difficulty breathing, sudden severe pain</p>
-          </div>
         </div>
 
         {/* Tabs */}
