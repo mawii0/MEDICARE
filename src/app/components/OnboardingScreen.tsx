@@ -33,6 +33,11 @@ export function OnboardingScreen({ onStart, darkMode }: OnboardingScreenProps) {
         {/* Hero */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
 
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-200 bg-blue-50 text-blue-700 text-xs font-medium mb-4">
+            <Bot className="w-3.5 h-3.5" />
+            Powered by a fine-tuned NLP model
+          </div>
+
           <h1 className={`text-3xl sm:text-4xl font-bold mb-3 leading-tight ${darkMode ? "text-white" : "text-gray-900"}`}>
             Pharmacare
           </h1>
@@ -43,7 +48,7 @@ export function OnboardingScreen({ onStart, darkMode }: OnboardingScreenProps) {
 
         {/* Input */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.4 }}>
-          <div className={`rounded-xl border overflow-hidden mb-3 ${darkMode ? "bg-gray-900 border-gray-800" : "bg-white border-gray-200"}`}>
+          <div className={`rounded-xl border overflow-hidden mb-3 shadow-sm ${darkMode ? "bg-gray-900 border-gray-800" : "bg-white border-gray-200"}`}>
             <textarea
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
@@ -88,7 +93,7 @@ export function OnboardingScreen({ onStart, darkMode }: OnboardingScreenProps) {
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2, duration: 0.4 }}
           className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-12">
           {FEATURES.map((f, i) => (
-            <div key={i} className={`p-4 rounded-xl border ${darkMode ? "bg-gray-900 border-gray-800" : "bg-white border-gray-200"}`}>
+            <div key={i} className={`p-4 rounded-xl border shadow-sm ${darkMode ? "bg-gray-900 border-gray-800" : "bg-white border-gray-200"}`}>
               <div className={`w-8 h-8 rounded-lg flex items-center justify-center mb-3 ${darkMode ? "bg-gray-800 text-gray-300" : "bg-gray-100 text-gray-600"}`}>
                 {f.icon}
               </div>
@@ -100,7 +105,7 @@ export function OnboardingScreen({ onStart, darkMode }: OnboardingScreenProps) {
 
         {/* Pipeline */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3, duration: 0.4 }}
-          className={`mt-6 p-4 rounded-xl border ${darkMode ? "bg-gray-900 border-gray-800" : "bg-white border-gray-200"}`}>
+          className={`mt-6 p-4 rounded-xl border shadow-sm ${darkMode ? "bg-gray-900 border-gray-800" : "bg-white border-gray-200"}`}>
           <div className="flex items-center gap-2 mb-3">
             <Activity className={`w-4 h-4 ${darkMode ? "text-gray-400" : "text-gray-500"}`} />
             <span className={`text-xs font-semibold ${darkMode ? "text-gray-300" : "text-gray-700"}`}>NLP Pipeline</span>
@@ -116,7 +121,7 @@ export function OnboardingScreen({ onStart, darkMode }: OnboardingScreenProps) {
 
         {/* Safety */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35, duration: 0.4 }}
-          className={`mt-3 p-4 rounded-xl border ${darkMode ? "bg-gray-900 border-gray-800" : "bg-white border-gray-200"}`}>
+          className={`mt-3 p-4 rounded-xl border shadow-sm ${darkMode ? "bg-gray-900 border-gray-800" : "bg-white border-gray-200"}`}>
           <div className="flex items-center gap-2 mb-3">
             <Shield className={`w-4 h-4 ${darkMode ? "text-gray-400" : "text-gray-500"}`} />
             <span className={`text-xs font-semibold ${darkMode ? "text-gray-300" : "text-gray-700"}`}>Safety Features</span>
@@ -132,7 +137,7 @@ export function OnboardingScreen({ onStart, darkMode }: OnboardingScreenProps) {
 
         {/* Disclaimer */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4, duration: 0.4 }}
-          className={`mt-6 p-4 rounded-xl flex gap-3 ${darkMode ? "bg-amber-950/30 border border-amber-900/50" : "bg-amber-50 border border-amber-200"}`}>
+          className={`mt-6 p-4 rounded-xl flex gap-3 shadow-sm ${darkMode ? "bg-amber-950/30 border border-amber-900/50" : "bg-amber-50 border border-amber-200"}`}>
           <AlertTriangle className={`w-4 h-4 flex-shrink-0 mt-0.5 ${darkMode ? "text-amber-400" : "text-amber-500"}`} />
           <p className={`text-xs leading-relaxed ${darkMode ? "text-amber-300" : "text-amber-700"}`}>
             <strong>Medical Disclaimer:</strong> Pharmacare is an educational NLP tool. It is not a substitute for professional medical advice. Always consult a licensed physician or pharmacist before taking any medication.

@@ -32,7 +32,7 @@ export function LoginScreen({ darkMode }: { darkMode: boolean }) {
   return (
     <div className={`min-h-screen flex ${darkMode ? "bg-[#09090b]" : "bg-[#fafafa]"}`}>
       {/* Left panel - branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-blue-600 items-center justify-center p-12">
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 items-center justify-center p-12">
         <div className="max-w-md">
           <div className="flex items-center gap-3 mb-8">
             <div className="w-10 h-10 rounded-lg bg-white border-2 border-blue-600 flex items-center justify-center shadow-sm">
@@ -60,7 +60,7 @@ export function LoginScreen({ darkMode }: { darkMode: boolean }) {
 
       {/* Right panel - form */}
       <div className="flex-1 flex items-center justify-center px-6 py-12">
-        <div className="w-full max-w-sm">
+        <div className={`w-full max-w-sm rounded-2xl p-6 shadow-sm border ${darkMode ? "bg-gray-950/80 border-gray-800" : "bg-white border-gray-200"}`}>
           {/* Mobile logo */}
           <div className="flex items-center gap-2 mb-10 lg:hidden">
             <div className="w-8 h-8 rounded-lg bg-white border-2 border-blue-600 flex items-center justify-center shadow-sm">

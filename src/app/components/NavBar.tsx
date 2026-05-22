@@ -24,7 +24,7 @@ export function Sidebar({ active, onNavigate, darkMode, onToggleDark, hasChat }:
   const { user, logout } = useAuth();
 
   return (
-    <aside className={`hidden md:flex flex-col h-screen flex-shrink-0 border-r transition-[width] duration-200 ease-in-out ${collapsed ? "w-[60px]" : "w-56"} ${darkMode ? "bg-[#09090b] border-gray-800" : "bg-white border-gray-200"}`}>
+    <aside className={`hidden md:flex flex-col h-screen flex-shrink-0 border-r shadow-sm transition-[width] duration-200 ease-in-out ${collapsed ? "w-[60px]" : "w-56"} ${darkMode ? "bg-[#09090b]/95 border-gray-800 backdrop-blur-sm" : "bg-white/95 border-gray-200 backdrop-blur-sm"}`}>
       {/* Logo */}
       <div className={`h-14 flex items-center ${collapsed ? "px-2 justify-center" : "px-4 justify-between"} border-b ${darkMode ? "border-gray-800" : "border-gray-100"}`}>
         <div className="flex items-center gap-2.5">
@@ -35,7 +35,7 @@ export function Sidebar({ active, onNavigate, darkMode, onToggleDark, hasChat }:
         </div>
         {!collapsed && (
           <button onClick={() => setCollapsed(true)}
-            className={`p-1 rounded ${darkMode ? "text-gray-600 hover:text-gray-400" : "text-gray-400 hover:text-gray-600"}`}>
+            className={`p-1 rounded transition-colors ${darkMode ? "text-gray-600 hover:text-gray-400" : "text-gray-400 hover:text-gray-600"}`}>
             <PanelLeftClose className="w-4 h-4" />
           </button>
         )}
@@ -58,9 +58,9 @@ export function Sidebar({ active, onNavigate, darkMode, onToggleDark, hasChat }:
           return (
             <button key={key} onClick={() => !isDisabled && onNavigate(key)} disabled={isDisabled}
               title={collapsed ? label : undefined}
-              className={`w-full flex items-center rounded-md transition-colors ${collapsed ? "justify-center px-0 py-2" : "gap-2.5 px-2.5 py-2"} ${
+              className={`w-full flex items-center rounded-md transition-all ${collapsed ? "justify-center px-0 py-2" : "gap-2.5 px-2.5 py-2"} ${
                 isActive
-                  ? darkMode ? "bg-blue-600/15 text-blue-400" : "bg-blue-50 text-blue-700"
+                ? darkMode ? "bg-blue-600/15 text-blue-400 shadow-[inset_0_0_0_1px_rgba(59,130,246,0.18)]" : "bg-blue-50 text-blue-700 shadow-[inset_0_0_0_1px_rgba(59,130,246,0.1)]"
                   : isDisabled
                     ? "text-gray-400 opacity-50 cursor-default"
                     : darkMode ? "text-gray-500 hover:bg-gray-800 hover:text-gray-300" : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
@@ -97,7 +97,7 @@ export function Sidebar({ active, onNavigate, darkMode, onToggleDark, hasChat }:
 export function MobileTopBar({ darkMode, onToggleDark }: Pick<NavComponentProps, "darkMode" | "onToggleDark">) {
   const { logout } = useAuth();
   return (
-    <header className={`md:hidden flex items-center justify-between px-4 h-14 border-b flex-shrink-0 ${darkMode ? "bg-[#09090b] border-gray-800" : "bg-white border-gray-200"}`}>
+    <header className={`md:hidden flex items-center justify-between px-4 h-14 border-b flex-shrink-0 shadow-sm ${darkMode ? "bg-[#09090b]/95 border-gray-800 backdrop-blur-sm" : "bg-white/95 border-gray-200 backdrop-blur-sm"}`}>
       <div className="flex items-center gap-2">
         <div className="w-6 h-6 rounded-md bg-white border-2 border-blue-600 flex items-center justify-center shadow-sm">
           <span className="text-blue-600" style={{ fontSize: "11px" }}>{"\u2695\ufe0f"}</span>
@@ -120,7 +120,7 @@ export function MobileTopBar({ darkMode, onToggleDark }: Pick<NavComponentProps,
 
 export function BottomNav({ active, onNavigate, darkMode, hasChat }: Omit<NavComponentProps, "onToggleDark">) {
   return (
-    <nav className={`md:hidden flex items-center justify-around h-14 border-t flex-shrink-0 ${darkMode ? "bg-[#09090b] border-gray-800" : "bg-white border-gray-200"}`}>
+    <nav className={`md:hidden flex items-center justify-around h-14 border-t flex-shrink-0 shadow-sm ${darkMode ? "bg-[#09090b]/95 border-gray-800 backdrop-blur-sm" : "bg-white/95 border-gray-200 backdrop-blur-sm"}`}>
       {NAV_ITEMS.map(({ key, label, Icon }) => {
         const isActive = active === key;
         const isDisabled = key === "chat" && !hasChat;

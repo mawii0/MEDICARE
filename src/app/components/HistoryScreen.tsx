@@ -91,7 +91,7 @@ export function HistoryScreen({ darkMode }: { darkMode: boolean }) {
               const s = SEVERITY[entry.severity] || SEVERITY.mild;
               return (
                 <motion.div key={entry.id} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}
-                  className={`p-3.5 rounded-xl border ${darkMode ? "bg-gray-900 border-gray-800" : "bg-white border-gray-200"}`}>
+                  className={`p-3.5 rounded-xl border shadow-sm ${darkMode ? "bg-gray-900 border-gray-800" : "bg-white border-gray-200"}`}>
                   <div className="flex items-start justify-between mb-1.5">
                     <div className="flex items-center gap-2">
                       <span className={`text-xs ${darkMode ? "text-gray-500" : "text-gray-400"}`}>{entry.date}</span>
@@ -127,7 +127,7 @@ export function HistoryScreen({ darkMode }: { darkMode: boolean }) {
               const isExpanded = expandedMed === med.id;
               return (
                 <motion.div key={med.id} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}
-                  className={`rounded-xl border overflow-hidden ${darkMode ? "bg-gray-900 border-gray-800" : "bg-white border-gray-200"}`}>
+                  className={`rounded-xl border overflow-hidden shadow-sm ${darkMode ? "bg-gray-900 border-gray-800" : "bg-white border-gray-200"}`}>
                   <div className="p-3.5 flex items-center gap-3">
                     <span className="text-lg">{med.icon}</span>
                     <div className="flex-1 min-w-0">
@@ -188,7 +188,7 @@ export function HistoryScreen({ darkMode }: { darkMode: boolean }) {
         {/* Settings Tab */}
         {activeTab === "settings" && (
           <div className="max-w-lg space-y-3">
-            <div className={`rounded-xl border overflow-hidden ${darkMode ? "bg-gray-900 border-gray-800" : "bg-white border-gray-200"}`}>
+            <div className={`rounded-xl border overflow-hidden shadow-sm ${darkMode ? "bg-gray-900 border-gray-800" : "bg-white border-gray-200"}`}>
               {[
                 { label: "Dosage Reminders", desc: "Get notified when to take medication", toggle: true },
                 { label: "Health Profile", desc: "Allergies, conditions, blood type" },
@@ -211,7 +211,7 @@ export function HistoryScreen({ darkMode }: { darkMode: boolean }) {
                 </div>
               ))}
             </div>
-            <div className={`p-3 rounded-xl border ${darkMode ? "bg-gray-900 border-gray-800" : "bg-white border-gray-200"}`}>
+            <div className={`p-3 rounded-xl border shadow-sm ${darkMode ? "bg-gray-900 border-gray-800" : "bg-white border-gray-200"}`}>
               <p className={`text-xs ${darkMode ? "text-gray-600" : "text-gray-400"}`}>Pharmacare v1.0.0</p>
             </div>
           </div>

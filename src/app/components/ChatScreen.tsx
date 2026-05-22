@@ -101,7 +101,7 @@ function MedicineCardComponent({ med, darkMode, saved, onSave, onFindPharmacy, r
 
   return (
     <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
-      className={`rounded-xl overflow-hidden border ${darkMode ? "bg-gray-900 border-gray-800" : "bg-white border-gray-200"}`}>
+      className={`rounded-xl overflow-hidden border shadow-sm ${darkMode ? "bg-gray-900 border-gray-800" : "bg-white border-gray-200"}`}>
 
       {/* Header */}
       <div className={`px-4 py-3 border-b ${darkMode ? "border-gray-800" : "border-gray-100"}`}>
@@ -348,7 +348,7 @@ export function ChatScreen({ initialSymptom, darkMode, onNavigateToPharmacy, mes
   return (
     <div className={`flex flex-col ${darkMode ? "bg-[#09090b]" : "bg-[#fafafa]"}`} style={{ height: "calc(100vh - 64px)" }}>
       {/* Header */}
-      <div className={`px-4 lg:px-6 py-3 flex items-center gap-3 border-b flex-shrink-0 ${darkMode ? "bg-[#09090b] border-gray-800" : "bg-white border-gray-200"}`}>
+      <div className={`px-4 lg:px-6 py-3 flex items-center gap-3 border-b flex-shrink-0 shadow-sm ${darkMode ? "bg-[#09090b]/95 border-gray-800 backdrop-blur-sm" : "bg-white/95 border-gray-200 backdrop-blur-sm"}`}>
         <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${darkMode ? "bg-blue-950 text-blue-400" : "bg-blue-50 text-blue-600"}`}>
           {"\u2695\ufe0f"}
         </div>
@@ -400,7 +400,7 @@ export function ChatScreen({ initialSymptom, darkMode, onNavigateToPharmacy, mes
                     )}
                     {!msg.emergency && msg.symptomAck && (
                       <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
-                        className={`px-3.5 py-2.5 rounded-xl rounded-bl-sm text-sm leading-relaxed ${darkMode ? "bg-gray-800 text-gray-200" : "bg-white text-gray-700 border border-gray-200"}`}>
+                        className={`px-3.5 py-2.5 rounded-xl rounded-bl-sm text-sm leading-relaxed shadow-sm ${darkMode ? "bg-gray-800 text-gray-200" : "bg-white text-gray-700 border border-gray-200"}`}>
                         <ul className="list-disc pl-5 space-y-1">
                           {formatRawResponseAsBullets(msg.symptomAck).map((item, i) => (
                             <li key={i}>
@@ -412,7 +412,7 @@ export function ChatScreen({ initialSymptom, darkMode, onNavigateToPharmacy, mes
                     )}
                     {!msg.medicine && !msg.emergency && msg.text && (
                       <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
-                        className={`px-3.5 py-2.5 rounded-xl rounded-bl-sm text-sm ${darkMode ? "bg-gray-800 text-gray-200" : "bg-white text-gray-700 border border-gray-200"}`}>
+                        className={`px-3.5 py-2.5 rounded-xl rounded-bl-sm text-sm shadow-sm ${darkMode ? "bg-gray-800 text-gray-200" : "bg-white text-gray-700 border border-gray-200"}`}>
                         {msg.text}
                       </motion.div>
                     )}
@@ -428,7 +428,7 @@ export function ChatScreen({ initialSymptom, darkMode, onNavigateToPharmacy, mes
       </div>
 
       {/* Input */}
-      <div className={`px-4 lg:px-6 pb-4 pt-2 border-t flex-shrink-0 ${darkMode ? "bg-[#09090b] border-gray-800" : "bg-white border-gray-200"}`}>
+      <div className={`px-4 lg:px-6 pb-4 pt-2 border-t flex-shrink-0 shadow-sm ${darkMode ? "bg-[#09090b]/95 border-gray-800 backdrop-blur-sm" : "bg-white/95 border-gray-200 backdrop-blur-sm"}`}>
         <div className="max-w-2xl mx-auto flex items-end gap-2">
           <div className={`flex-1 flex items-end rounded-xl px-3.5 py-2.5 border ${darkMode ? "bg-gray-900 border-gray-800" : "bg-gray-50 border-gray-200"}`}>
             <textarea value={inputValue} onChange={e => setInputValue(e.target.value)}

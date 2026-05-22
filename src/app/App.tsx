@@ -19,7 +19,7 @@ function AppContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-slate-100">
         <div className="w-8 h-8 border-3 border-blue-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
@@ -36,7 +36,8 @@ function AppContent() {
   };
 
   return (
-    <div className={`flex h-screen w-screen overflow-hidden ${darkMode ? "bg-[#09090b]" : "bg-[#fafafa]"}`}>
+    <div className={`relative flex h-screen w-screen overflow-hidden ${darkMode ? "bg-[#09090b]" : "bg-[#fafafa]"}`}>
+      <div className={`pointer-events-none absolute inset-0 ${darkMode ? "bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.12),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(59,130,246,0.08),transparent_30%)]" : "bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.12),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.08),transparent_30%)]"}`} />
       <Sidebar
         active={screen}
         onNavigate={setScreen}
@@ -45,7 +46,7 @@ function AppContent() {
         hasChat={hasStartedChat}
       />
 
-      <div className="flex-1 min-w-0 overflow-hidden flex flex-col">
+      <div className="relative z-10 flex-1 min-w-0 overflow-hidden flex flex-col">
         <MobileTopBar
           darkMode={darkMode}
           onToggleDark={() => setDarkMode((v) => !v)}
