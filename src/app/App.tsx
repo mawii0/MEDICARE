@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { AuthProvider, useAuth } from "../lib/auth";
 import { LoginScreen } from "./components/LoginScreen";
 import { OnboardingScreen } from "./components/OnboardingScreen";
-import { ChatScreen } from "./components/ChatScreen";
+import { ChatScreen, type Message } from "./components/ChatScreen";
 import { PharmacyScreen } from "./components/PharmacyScreen";
 import { HistoryScreen } from "./components/HistoryScreen";
 import { Sidebar, BottomNav, MobileTopBar, type Screen } from "./components/NavBar";
@@ -14,6 +14,8 @@ function AppContent() {
   const [screen, setScreen] = useState<Screen>("home");
   const [currentSymptom, setCurrentSymptom] = useState("");
   const [hasStartedChat, setHasStartedChat] = useState(false);
+  const [chatMessages, setChatMessages] = useState<Message[]>([]);
+  const [autoSentSymptom, setAutoSentSymptom] = useState<string | null>(null);
 
   if (loading) {
     return (
@@ -71,6 +73,10 @@ function AppContent() {
                   initialSymptom={currentSymptom}
                   darkMode={darkMode}
                   onNavigateToPharmacy={() => setScreen("pharmacy")}
+                  messages={chatMessages}
+                  setMessages={setChatMessages}
+                  autoSentSymptom={autoSentSymptom}
+                  onAutoSentSymptom={setAutoSentSymptom}
                 />
               )}
               {screen === "pharmacy" && (

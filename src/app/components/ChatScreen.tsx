@@ -17,7 +17,7 @@ interface MedicineCard {
   otc: boolean;
 }
 
-interface Message {
+export interface Message {
   id: string;
   role: "user" | "bot";
   text?: string;
@@ -217,22 +217,24 @@ interface ChatScreenProps {
   initialSymptom: string;
   darkMode: boolean;
   onNavigateToPharmacy: () => void;
+  messages: Message[];
+  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
+  autoSentSymptom: string | null;
+  onAutoSentSymptom: (symptom: string) => void;
 }
 
-export function ChatScreen({ initialSymptom, darkMode, onNavigateToPharmacy }: ChatScreenProps) {
-  const [messages, setMessages] = useState<Message[]>([]);
+export function ChatScreen({ initialSymptom, darkMode, onNavigateToPharmacy, messages, setMessages, autoSentSymptom, onAutoSentSymptom }: ChatScreenProps) {
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [savedMeds, setSavedMeds] = useState<Set<string>>(new Set());
   const bottomRef = useRef<HTMLDivElement>(null);
-  const hasInitialized = useRef(false);
 
   useEffect(() => {
-    if (!hasInitialized.current && initialSymptom) {
-      hasInitialized.current = true;
+    if (initialSymptom && autoSentSymptom !== initialSymptom) {
       sendMessage(initialSymptom, true);
+      onAutoSentSymptom(initialSymptom);
     }
-  }, [initialSymptom]);
+  }, [initialSymptom, autoSentSymptom, onAutoSentSymptom]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
