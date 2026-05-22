@@ -1,0 +1,7 @@
+[INFO] Starting Pharmacare API...
+[INFO] Loading model + adapters (this may take ~30-60s)...
+[INFO] Using device: cpu
+ * Serving Flask app 'api'
+ * Debug mode: off
+[INFO] Loading base model: TinyLlama/TinyLlama-1.1B-Chat-v1.0
+[INFO] No CUDA detected — loading model on CPU (float32, slower)

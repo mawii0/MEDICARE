@@ -37,7 +37,7 @@ function AppContent() {
 
   return (
     <div className={`relative flex h-screen w-screen overflow-hidden ${darkMode ? "bg-[#09090b]" : "bg-[#fafafa]"}`}>
-      <div className={`pointer-events-none absolute inset-0 ${darkMode ? "bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.12),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(59,130,246,0.08),transparent_30%)]" : "bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.12),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.08),transparent_30%)]"}`} />
+      <div className={`pointer-events-none absolute inset-0 -z-10 ${darkMode ? "bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.12),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(59,130,246,0.08),transparent_30%)]" : "bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.12),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.08),transparent_30%)]"}`} />
       <Sidebar
         active={screen}
         onNavigate={setScreen}

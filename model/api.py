@@ -19,6 +19,7 @@ Environment:
 import os
 import sys
 import time
+import threading
 import torch
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -33,17 +34,31 @@ from src.inference import chat, chat_full
 app = Flask(__name__)
 CORS(app)
 
+model_state = {
+    "loading": True,
+    "ready": False,
+    "error": None,
+}
+
+
+def _warmup_model():
+    print("[INFO] Loading model + adapters (this may take ~30-60s)...")
+    try:
+        chat_full("Hello")
+        model_state["ready"] = True
+        model_state["error"] = None
+        print("[INFO] Model warm-up complete. API ready.")
+    except Exception as e:
+        model_state["error"] = str(e)
+        print(f"[FATAL] Model failed to load: {e}")
+    finally:
+        model_state["loading"] = False
+
 # ------------------------------------------------------------------------------
 # Warm-up: verify model loads before accepting traffic
 # ------------------------------------------------------------------------------
 print("[INFO] Starting Pharmacare API...")
-print("[INFO] Loading model + adapters (this may take ~30-60s)...")
-try:
-    _warmup = chat_full("Hello")
-    print("[INFO] Model warm-up complete. API ready.")
-except Exception as e:
-    print(f"[FATAL] Model failed to load: {e}")
-    sys.exit(1)
+threading.Thread(target=_warmup_model, daemon=True).start()
 
 # ------------------------------------------------------------------------------
 # ROUTES
@@ -51,9 +66,12 @@ except Exception as e:
 
 @app.route("/health", methods=["GET"])
 def health():
+    status = "ready" if model_state["ready"] else "loading" if model_state["loading"] else "error"
     return jsonify({
-        "status": "ok",
-        "model_loaded": True,
+        "status": status,
+        "model_loaded": model_state["ready"],
+        "loading": model_state["loading"],
+        "error": model_state["error"],
         "device": "cuda" if torch.cuda.is_available() else "cpu",
         "gpu_name": torch.cuda.get_device_name(0) if torch.cuda.is_available() else None,
     })
@@ -85,6 +103,12 @@ def chat_endpoint():
 
     if not user_message:
         return jsonify({"error": "Missing 'message' field."}), 400
+
+    if not model_state["ready"]:
+        return jsonify({
+            "error": "Model is still loading.",
+            "status": "loading",
+        }), 503
 
     start = time.time()
     try:

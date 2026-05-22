@@ -4,6 +4,8 @@ dist/
 *.local
 .env
 .env.*
+.venv
+.venv.*
 mediguide.db
 mediguide.db-shm
 mediguide.db-wal
