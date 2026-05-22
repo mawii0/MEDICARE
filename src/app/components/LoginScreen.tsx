@@ -54,7 +54,6 @@ export function LoginScreen({ darkMode }: { darkMode: boolean }) {
                 </div>
               ))}
             </div>
-            <p className="text-blue-100 text-sm">Trusted by students and professionals</p>
           </div>
         </div>
       </div>

@@ -64,6 +64,36 @@ function EmergencyBanner({ darkMode, language }: { darkMode: boolean; language: 
   );
 }
 
+function formatRawResponseAsBullets(text: string): Array<{ label: string; value: string }> {
+  const normalized = text
+    .replace(/\*\*/g, "")
+    .replace(/\s*---\s*/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  const labelPattern = /([A-Za-z][A-Za-z /()&-]+):/g;
+  const matches = [...normalized.matchAll(labelPattern)];
+
+  if (!matches.length) {
+    return [{ label: "Response", value: normalized }];
+  }
+
+  const items: Array<{ label: string; value: string }> = [];
+
+  matches.forEach((match, index) => {
+    const label = match[1].trim();
+    const valueStart = match.index + match[0].length;
+    const valueEnd = index + 1 < matches.length ? matches[index + 1].index : normalized.length;
+    const value = normalized.slice(valueStart, valueEnd).trim();
+
+    if (value) {
+      items.push({ label, value });
+    }
+  });
+
+  return items.length ? items : [{ label: "Response", value: normalized }];
+}
+
 function MedicineCardComponent({ med, darkMode, saved, onSave, onFindPharmacy, rxFlag }: {
   med: MedicineCard; darkMode: boolean; saved: boolean; onSave: () => void; onFindPharmacy: () => void; rxFlag?: boolean;
 }) {
@@ -363,16 +393,22 @@ export function ChatScreen({ initialSymptom, darkMode, onNavigateToPharmacy, mes
                     {msg.emergency && msg.language && (
                       <EmergencyBanner darkMode={darkMode} language={msg.language} />
                     )}
-                    {!msg.emergency && msg.symptomAck && (
-                      <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
-                        className={`px-3.5 py-2.5 rounded-xl rounded-bl-sm text-sm leading-relaxed ${darkMode ? "bg-gray-800 text-gray-200" : "bg-white text-gray-700 border border-gray-200"}`}>
-                        {msg.symptomAck.split("**").map((part, i) => i % 2 === 1 ? <strong key={i}>{part}</strong> : part)}
-                      </motion.div>
-                    )}
                     {msg.medicine && !msg.emergency && (
                       <MedicineCardComponent med={msg.medicine} darkMode={darkMode}
                         saved={savedMeds.has(msg.medicine.name)} onSave={() => toggleSave(msg.medicine!.name, msg.medicine!)}
                         onFindPharmacy={onNavigateToPharmacy} rxFlag={msg.rxFlag} />
+                    )}
+                    {!msg.emergency && msg.symptomAck && (
+                      <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
+                        className={`px-3.5 py-2.5 rounded-xl rounded-bl-sm text-sm leading-relaxed ${darkMode ? "bg-gray-800 text-gray-200" : "bg-white text-gray-700 border border-gray-200"}`}>
+                        <ul className="list-disc pl-5 space-y-1">
+                          {formatRawResponseAsBullets(msg.symptomAck).map((item, i) => (
+                            <li key={i}>
+                              <strong>{item.label}:</strong> {item.value}
+                            </li>
+                          ))}
+                        </ul>
+                      </motion.div>
                     )}
                     {!msg.medicine && !msg.emergency && msg.text && (
                       <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
