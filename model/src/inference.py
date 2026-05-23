@@ -67,27 +67,19 @@ class PharmacareInference:
             tokenizer.pad_token_id = tokenizer.eos_token_id
         self.tokenizer = tokenizer
 
+        bnb_config = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_use_double_quant=True,
+            bnb_4bit_compute_dtype=torch.bfloat16,
+        )
         print(f"[INFO] Loading base model: {model_name}")
-        if self.device == "cuda":
-            bnb_config = BitsAndBytesConfig(
-                load_in_4bit=True,
-                bnb_4bit_quant_type="nf4",
-                bnb_4bit_use_double_quant=True,
-                bnb_4bit_compute_dtype=torch.bfloat16,
-            )
-            base_model = AutoModelForCausalLM.from_pretrained(
-                model_name,
-                quantization_config=bnb_config,
-                device_map="auto",
-                trust_remote_code=True,
-            )
-        else:
-            print("[INFO] No CUDA detected — loading model on CPU (float32, slower)")
-            base_model = AutoModelForCausalLM.from_pretrained(
-                model_name,
-                torch_dtype=torch.float32,
-                trust_remote_code=True,
-            )
+        base_model = AutoModelForCausalLM.from_pretrained(
+            model_name,
+            quantization_config=bnb_config,
+            device_map="auto",
+            trust_remote_code=True,
+        )
 
         if os.path.isdir(adapter_path):
             print(f"[INFO] Loading LoRA adapter: {adapter_path}")

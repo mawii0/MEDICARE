@@ -214,7 +214,7 @@ print(data["structured"])    # JSON
 
 ## 8. Notes
 
-- **Offline only**: No external LLM APIs are called at inference time.
+- **Local inference**: No external LLM APIs are called at inference time.
 - **First request**: May be slightly slower due to GPU warm-up.
 - **Safety**: The `/chat` endpoint enforces emergency bypass, Rx warnings, disclaimers, and RA 9165 controlled-substance notes automatically.
 - **Structured output**: The `structured` field makes it easy to build frontend UIs, mobile apps, or database integrations.

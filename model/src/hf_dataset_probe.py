@@ -163,7 +163,7 @@ def probe_datasets():
         "\n    external HF medical knowledge for broader coverage."
         "\n  - NO external API calls are made at inference time."
         "\n  - This demonstrates MULTI-SOURCE PROCESSING CAPABILITY while"
-        "\n    maintaining full offline operation and data sovereignty."
+        "\n    ensuring all model inference happens locally on the server."
     )
     print("=" * 70)
 

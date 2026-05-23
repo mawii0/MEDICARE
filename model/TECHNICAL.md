@@ -30,7 +30,7 @@
 |-----------|-------|
 | **Source** | Multi-source: Philippine pharmaceutical references + Hugging Face medical Q/A datasets |
 | **Specific sources** | FDA-Philippines (FDA-PH) registered drug list; Mercury Drug, Rose Pharmacy, and The Generics Pharmacy catalogs; openlifescienceai/medical-qa; bigbio/pubmed_qa |
-| **Content** | 80 drugs (30 OTC, 50 Rx) with generic names, PH brand names, approximate ₱ prices, indications, adult dosages, side effects, contraindications |
+| **Content** | 140 drugs (50 OTC, 90 Rx) with generic names, PH brand names, approximate ₱ prices, indications, adult dosages, side effects, contraindications |
 | **Method** | Hand-compiled; started with 40 drugs in `src/generate_drug_db.py`, expanded to 80 via `src/append_drugs.py` |
 
 **Schema per record:**
@@ -63,7 +63,7 @@
 |-----------|-------|
 | **Source** | Generated from the master drug reference via `src/build_dataset.py` |
 | **Method** | 5-stage pipeline (Ingest → Extract → Process → Augment → Export) |
-| **Size** | ~2,179 deduplicated examples across 8 intent classes (320 per intent target, ~140 drug records)
+| **Size** | ~5,291 deduplicated examples across 8 intent classes (800 per intent target, ~140 drug records)
 | **Format** | TinyLlama chat template (`<|system|>`, `<|user|>`, `<|assistant|>`, `</s>`) |
 
 **What to say in defense:**
@@ -79,7 +79,7 @@ The file `src/hf_dataset_probe.py` extracts and integrates medical Q/A knowledge
 These datasets were processed in **streaming mode** to minimize disk usage. Their fields (question, answer, context, mesh_terms, labels) were mapped to our local Philippine drug reference format and integrated into the `pharmacare-dataset` corpus.
 
 **What to say in defense:**
-> "We augmented our local Philippine drug database with field-mapped knowledge from two Hugging Face medical Q/A datasets: openlifescienceai/medical-qa and bigbio/pubmed_qa. We processed their schemas in streaming mode, mapped their question/answer pairs to our intent templates, and integrated their medical context (indications, contraindications, drug classes) into our structured drug records. This demonstrates multi-source data integration while maintaining full offline operation at inference time."
+> "We augmented our local Philippine drug database with field-mapped knowledge from two Hugging Face medical Q/A datasets: openlifescienceai/medical-qa and bigbio/pubmed_qa. We processed their schemas in streaming mode, mapped their question/answer pairs to our intent templates, and integrated their medical context (indications, contraindications, drug classes) into our structured drug records. This demonstrates multi-source data integration while ensuring all model inference happens locally on the server."
 
 ### 1.4 Classifier Labels: `data/classifier_training_data.jsonl`
 
@@ -125,7 +125,7 @@ These datasets were processed in **streaming mode** to minimize disk usage. Thei
 
 #### QLoRA over Full Fine-Tuning
 - **Why not full fine-tuning?** TinyLlama-1.1B has ~1.1 billion parameters. Full fine-tuning would require ~22 GB VRAM (FP16). QLoRA uses 4-bit quantization + LoRA adapters, fitting in ~5.5 GB VRAM.
-- **Why r=8, alpha=16?** This is the standard "rule of thumb" (alpha = 2*r). For a 1.1B model on a small domain corpus (~2,179 examples), rank 8 is sufficient. Higher ranks risk overfitting.
+- **Why r=8, alpha=16?** This is the standard "rule of thumb" (alpha = 2*r). For a 1.1B model on a domain corpus (~5,291 examples), rank 8 is sufficient. Higher ranks risk overfitting.
 
 ---
 
@@ -197,7 +197,7 @@ These datasets were processed in **streaming mode** to minimize disk usage. Thei
 | Criterion | TinyLlama-1.1B | Qwen2.5-1.5B (previously considered) |
 |-----------|---------------|--------------------------------------|
 | VRAM for training | ~5.5 GB | ~7.5 GB |
-| Training time (3 epochs) | ~30–40 min | ~60–90 min |
+| Training time (3 epochs) | ~2.0–2.3 hours | ~60–90 min |
 | Parameter count | 1.1B | 1.5B |
 | Chat template complexity | Simple (`<|system|>`) | Complex (`<|im_start|>`) |
 | Filipino/Taglish support | Good (BPE handles subwords) | Good |
@@ -212,7 +212,7 @@ These datasets were processed in **streaming mode** to minimize disk usage. Thei
 
 | Parameter | Value | Rationale |
 |-----------|-------|-----------|
-| Epochs | 3 | Sufficient for domain adaptation on ~2,179 examples |
+| Epochs | 3 | Sufficient for domain adaptation on ~5,291 examples |
 | Batch size | 1 | VRAM constraint |
 | Gradient accumulation | 2 | Effective batch = 2 |
 | Learning rate | 2.0e-4 | Standard for LoRA fine-tuning |
@@ -290,7 +290,7 @@ These datasets were processed in **streaming mode** to minimize disk usage. Thei
 | Metric | Value |
 |--------|-------|
 | Final training loss | ~1.8 (checkpoint-2157) |
-| Training time | ~45–55 minutes on RTX 4050 |
+| Training time | ~2.0–2.3 hours on RTX 4050 |
 | VRAM usage | ~5.5 GB peak |
 | Perplexity | Can be computed via `compute_perplexity()` helper |
 
@@ -458,7 +458,7 @@ The `response` is a human-readable Markdown string with **bold labels**. Empty o
 > "Our drug reference was compiled from publicly available Philippine pharmaceutical sources: the FDA-PH drug registry, major pharmacy catalogs (Mercury Drug, Rose Pharmacy, Generics Pharmacy), and standard pharmaceutical references. We manually processed 140 drugs with their generic names, local brand names, approximate prices, indications, dosages, side effects, and contraindications. The Q/A training corpus was then generated from this structured reference through a 5-stage pipeline — no external medical Q/A datasets were downloaded or used."
 
 ### Q: "Why did you choose TinyLlama over larger models?"
-> "We evaluated TinyLlama-1.1B against Qwen2.5-1.5B. TinyLlama trains in ~35 minutes on our RTX 4050 (6 GB VRAM) versus ~90 minutes for Qwen. It also uses a simpler chat template (`<|system|>`) which reduces tokenization mismatch risk. For a domain-specific chatbot with deterministic retrieval, a 1.1B parameter model is sufficient — the LLM primarily serves as a fallback for out-of-distribution queries."
+> "We evaluated TinyLlama-1.1B against Qwen2.5-1.5B. TinyLlama trains in ~2.0–2.3 hours on our RTX 4050 (6 GB VRAM) versus ~90 minutes for Qwen. It also uses a simpler chat template (`<|system|>`) which reduces tokenization mismatch risk. For a domain-specific chatbot with deterministic retrieval, a 1.1B parameter model is sufficient — the LLM primarily serves as a fallback for out-of-distribution queries."
 
 ### Q: "How do you prevent hallucinations?"
 > "We use a deterministic retrieval-first architecture. For standard intents (OTC rec, drug info, side effects, price, interaction, intake), we bypass LLM generation entirely. The answer is constructed directly from retrieved drug records using `build_structured_answer()`. The LLM is only used as a fallback for novel queries or when the intent classifier returns 'unknown'. This guarantees factual accuracy for 90%+ of user queries."
@@ -472,8 +472,8 @@ The `response` is a human-readable Markdown string with **bold labels**. Empty o
 ### Q: "What NLP techniques did you use and why?"
 > "We applied a full NLP pipeline: (1) Unicode normalization and lowercasing for consistency, (2) brand-to-generic name normalization because Filipinos often use brand names, (3) NLTK tokenization + lemmatization + custom stopword filtering for classical ML, (4) Taglish symptom translation for BM25 retrieval, (5) TF-IDF with 1-2 grams for feature extraction, (6) ComplementNB for intent classification because it handles class imbalance, (7) BM25 for lexical retrieval because it's deterministic and works well on short medical queries, (8) Skip-gram Word2Vec for domain embeddings because drug names are rare terms, and (9) QLoRA for parameter-efficient LLM fine-tuning to fit 6 GB VRAM."
 
-### Q: "Why is your system fully offline?"
-> "This is a core requirement of CCS 249 — Natural Language Processing. Patient health data must never leave the local machine. External LLM APIs like OpenAI or Claude would leak query content to third-party servers, violating patient privacy. Our system loads TinyLlama locally, runs all classifiers locally, and stores all drug data in local JSONL files. No network calls are made at inference time."
+### Q: "How does your system protect privacy when deployed online?"
+> "All model inference happens locally on the server. The Flask API receives user queries, but no data is sent to external LLM APIs like OpenAI or Claude. TinyLlama, the classifiers, the drug database, and the retrieval index all reside on the same server. This ensures patient health data never leaves the local machine, complying with RA 10173 (Data Privacy Act of 2012) even when the API is exposed online."
 
 ---
 
@@ -481,7 +481,7 @@ The `response` is a human-readable Markdown string with **bold labels**. Empty o
 
 | Limitation | Impact | Mitigation |
 |------------|--------|------------|
-| **Vocabulary coverage** | 80 drugs may not cover rare medicines | Expandable via `append_drugs.py`; clear fallback message when unknown |
+| **Vocabulary coverage** | 140 drugs may not cover rare medicines | Expandable via `append_drugs.py`; clear fallback message when unknown |
 | **Intent classifier** | ComplementNB is fast but may misclassify novel phrasings | Rx classifier acts as safety net; LLM fallback for truly novel queries |
 | **Rx false positives** | Aggressive Rx weighting occasionally flags OTC queries as Rx | Rx-only retrieval retry without restriction; user still gets safe info |
 | **No conversational memory** | Each query is independent | Future: add session-based context window |
@@ -494,8 +494,8 @@ The `response` is a human-readable Markdown string with **bold labels**. Empty o
 
 | Enhancement | Description | Technical Approach |
 |-------------|-------------|-------------------|
-| **Expand Drug DB** | 80 → 200+ drugs | Auto-scrape FDA-PH + pharmacy catalogs; manual verification |
-| **Neural Intent Classifier** | Replace ComplementNB with fine-tuned BERT | DistilBERT-Tagalog or mBERT on ~2,179 labeled examples |
+| **Expand Drug DB** | 140 → 200+ drugs | Auto-scrape FDA-PH + pharmacy catalogs; manual verification |
+| **Neural Intent Classifier** | Replace ComplementNB with fine-tuned BERT | DistilBERT-Tagalog or mBERT on ~5,291 labeled examples |
 | **RAG Hybrid** | BM25 + dense retrieval | Add FAISS index over drug record embeddings from pharma Word2Vec |
 | **Voice Interface** | STT/TTS for hands-free use | Whisper STT + Coqui TTS (Filipino voice) |
 | **Mobile App** | React Native/Flutter wrapper | API-first design already supports this |
