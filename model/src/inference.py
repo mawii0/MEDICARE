@@ -185,6 +185,10 @@ class PharmacareInference:
                 "structured": structured,
             }
 
+        # Resolve the final OTC/Rx state from the retrieved drug record(s) when possible.
+        # This prevents classifier false positives from marking OTC medicines like ibuprofen as Rx.
+        resolved_rx_flag = any(r.get("rx_status") == "Rx" for r in matched_records)
+
         # ------------------------------------------------------------------
         # Deterministic structured answer generation from retrieved records.
         # ------------------------------------------------------------------
@@ -194,15 +198,15 @@ class PharmacareInference:
         # Post-generation safety: strip artifacts and enforce Rx rules
         markdown = _clean_hallucinations(markdown)
 
-        is_rx = any(r["rx_status"] == "Rx" for r in matched_records)
+        is_rx = resolved_rx_flag
         is_controlled = any("controlled" in r.get("drug_class", "").lower() for r in matched_records)
-        if is_rx or routing["rx_flag"]:
+        if is_rx:
             markdown = enforce_rx_note(markdown, is_controlled=is_controlled, lang=lang)
         final_response = append_disclaimer(markdown, lang=lang)
 
         return {
             "query": raw_query, "language": lang, "emergency": False,
-            "intent": routing["intent"], "rx_flag": routing["rx_flag"],
+            "intent": routing["intent"], "rx_flag": resolved_rx_flag,
             "retrieved_context": context, "response": final_response,
             "structured": structured,
         }

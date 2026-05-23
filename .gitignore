@@ -9,3 +9,4 @@ dist/
 mediguide.db
 mediguide.db-shm
 mediguide.db-wal
+npm-debug.log*
