@@ -1,5 +1,5 @@
-const BASE = "/api";
-const NLP_BASE = "http://localhost:5000";
+const BASE = import.meta.env.VITE_API_BASE || "/api";
+const NLP_BASE = import.meta.env.VITE_NLP_BASE || "http://localhost:5000";
 
 function getToken(): string | null {
   return localStorage.getItem("mediguide_token");
